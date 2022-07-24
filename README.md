@@ -1,4 +1,7 @@
+This library allows parsing JSON files in streaming mode using a subset of JSONpath expressions.
+
 # Usage #
+Given the following JSON file
 
 ```json
 {
@@ -42,6 +45,8 @@
 }
 ```
 
+You can specify the fields to extract using the following POJO
+
 ```java
 public static class Book {
         @JsonPath("$.owner.*.name")
@@ -55,9 +60,10 @@ public static class Book {
 }
 ```
 
+And run the parser as follows
+
 ```java
-List<Book> books = JsonStreamParser.parse(jsonInputStream,
-Book.class);
+List<Book> books = JsonStreamParser.parse(jsonInputStream, Book.class);
 ```
 
 

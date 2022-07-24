@@ -17,24 +17,29 @@
 
 package com.booduro.parser.json;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.testng.annotations.Test;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+
+import static org.testng.Assert.assertEquals;
 
 /**
  * @author saifeddine.benchahed
  */
 public class JsonStreamParserTest {
-    @Test
-    public void parseTest() throws FileNotFoundException {
-        List<Book> books = JsonStreamParser.parse(new FileInputStream(getClass().getClassLoader().getResource("oneBookStore.json").getFile()),
-                Book.class);
-        System.out.println();
-    }
 
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @EqualsAndHashCode
     public static class Book {
+
         @JsonPath("$.owner.*.name")
         public String owner;
 
@@ -42,7 +47,21 @@ public class JsonStreamParserTest {
         public String author;
 
         @JsonPath("$.store[*].book.otherprice")
-        public int otherprice;
+        public Integer otherprice;
+    }
+
+    @Test
+    public void parseTest() throws FileNotFoundException {
+        List<Book> books = JsonStreamParser.parse(
+                new FileInputStream(getClass().getClassLoader().getResource("oneBookStore.json").getFile()),
+                Book.class);
+
+        HashSet<Book> expected = new HashSet<>(Arrays.asList(
+                new Book("jifa", "hamadi2", 232),
+                new Book("khalifa", "hamadi2", 232),
+                new Book("jifa", "hamadi1", null),
+                new Book("khalifa", "hamadi1", null)));
+        assertEquals(expected, new HashSet<>(books));
     }
 
 }
